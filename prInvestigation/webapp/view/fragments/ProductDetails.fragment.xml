@@ -1,0 +1,34 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<ResponsivePopover id="idMsgDia_responsivepopover0" title="{i18n>Prouct Batch Details}" placement="Auto">
+		<endButton>
+			<Button id="idMsgDia_button0" text="{i18n>Close}" press="handleCloseMessageDialog"/>
+		</endButton>
+		<content>
+			<Table id="idMessageItemsTable" inset="false" fixedLayout="false" items="{path: 'productBatchDetails>/', templateShareable:false}">
+				<columns>
+					<Column id="idMsgDia_column0">
+						<Text id="idMsgDia_text0" text="Plant"/>
+					</Column>
+					<Column id="idMsgDia_column1">
+						<Text id="idMsgDia_text1" text="Storage Location"/>
+					</Column>
+					<Column id="idMsgDia_column2">
+						<Text id="idMsgDia_text2" text="Quantity"/>
+					</Column>
+				</columns>
+				<items>
+					<ColumnListItem id="idMsgDia_columnlistitem0" >
+						<cells>
+							<ObjectStatus id="idMsgDia_objectstatus0" 
+								text="{productBatchDetails>/Plant}"/>							
+							<ObjectStatus id="idMsgDia_objectstatus2" 
+								text="{productBatchDetails>/SoldUnit}"/>
+                                <ObjectNumber id="idMsgDia_objectstatus1" 
+								number="{productBatchDetails>/SoldQuantity}"/>
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
+		</content>
+	</ResponsivePopover>
+</core:FragmentDefinition>

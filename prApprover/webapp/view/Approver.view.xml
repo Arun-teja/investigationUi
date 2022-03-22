@@ -1,0 +1,40 @@
+<mvc:View controllerName="com.pr.prApprover.controller.Approver" xmlns:mvc="sap.ui.core.mvc" xmlns:form="sap.ui.layout.form" displayBlock="true" xmlns="sap.m">
+    <App id="app">
+        <pages>
+            <Page showHeader="false" showFooter="false" title="Approval for Investigation">
+                <content>
+                    <Text text="{context>/investigationData/investigationNumber}"/>
+                        <Table>
+                            <columns>
+                                <Column>
+                                    <Text text="Plant"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="Product"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="Quantity"></Text>
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <Text text="{context>/Plant}"/>
+                                    <Text text="{context>/investigationData/product}"/>
+                                    <Text text="{context>/Quantity}"/>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    
+                        <form:SimpleForm layout="ResponsiveLayout" editable="true" width="100%" maxContainerCols="1">
+                            <Label text="Complaint Number"/>
+                            <Text text="{context>/investigationData/complaintNumber/complaintNo}"/>
+                            <Label text="Investigation Number"/>
+                            <Text text="{context>/investigationData/investigationNumber}"/>
+                            <Label text="BATCH"/>
+                            <Text text="{context>/investigationData/complaintNumber/batch}"/>
+                        </form:SimpleForm>
+                </content>
+            </Page>
+        </pages>
+    </App>
+</mvc:View>

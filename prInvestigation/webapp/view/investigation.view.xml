@@ -1,0 +1,66 @@
+<mvc:View controllerName="com.pr.prInvestigation.controller.investigation"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:form="sap.ui.layout.form" xmlns:layout="sap.ui.layout">
+    <App id="app">
+        <pages>
+            <Page title="Investigation Report">
+                <content>
+                    <Wizard id="wizard" showNextButton="true" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" finishButtonText="Submit" complete="onCreateInvestigation">
+                           
+                            <WizardStep id="wizard_Complaints" title="Complaint">
+                                <form:SimpleForm editable="true" layout="ColumnLayout">
+                                    <Label id="a" text="{i18n>compNum}"/>
+                                    <Input id="complaintNumber" change="onComplaintNumberInput" required="true"/>
+                                    <!-- <Button id= "testBtn" text="testTrigger " press="onBtnPress"></Button> -->
+                                </form:SimpleForm>
+                                <form:SimpleForm editable="true" layout="ColumnLayout">
+                                    <Label id="b" text="Complaint Date"/>
+                                    <DatePicker id="complaintDate" displayFormat="dd-MMM-yyyy" editable="false" dateValue="{complaintModel>/complaintDate}"/>
+
+                                    <Label id="c" text="Product"/>
+                                    <Input id="product" editable="false" value="{complaintModel>/product}"/>
+
+                                    <Label id="e" text="Batch No"/>
+                                    <Input id="batchNo" editable="false" value="{complaintModel>/batch}"/>
+                                    <Label/>
+                                    <Label id="f" text="Expiry Date"/>
+                                    <DatePicker id="expiryDate" displayFormat="dd-MMM-yyyy" editable="false" dateValue="{complaintModel>/expiryDate}"/>
+                                    <Label id="d" text="Remarks"/>
+                                    <Input id="remarks" editable="false" value="{complaintModel>/remarks}"/>
+                                    <Label id="g" text="Type Of Complaint"/>
+                                    <Input id="typeOfComplaint" editable="false" value="{complaintModel>/typeOfComplaint/name}"/>
+
+                                </form:SimpleForm>
+                            </WizardStep>
+
+                            <WizardStep id="wizard_Investigation" title="Investigation Details">
+                                <form:SimpleForm editable="true" layout="ColumnLayout">
+                                    <Label id="i" text="Investigation Start Date" required="true"/>
+                                    <DatePicker id="investigationStartDate" displayFormat="dd-MMM-yyyy" value="{ path: 'complaintModel>/invStartDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions : {style : 'long'} ,constraints: { displayFormat: 'Date' } }"
+                                    valueState="{= ${complaintModel>/invStartDate} !== null ? 'None' : 'Error' }"/>
+                                    <Label id="id" text="Investigation Officer"/>
+                                    <Input id="nameOfInvestigationOfficer" value="{complaintModel>/investigationBy}"/>
+                                    <Label id="j" text="Investigation End Date" required="true"/>
+                                    <DatePicker id="investigationEndDate" displayFormat="dd-MMM-yyyy" value="{ path: 'complaintModel>/invEndDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions : {style : 'long'} ,constraints: { displayFormat: 'Date' } }"
+                                    valueState="{= ${complaintModel>/invEndDate} !== null ? 'None' : 'Error' }"/>
+                                    <Label id="l1" text="Investigation Remarks"/>
+                                    <TextArea id="investigationRemarks" cols="100" rows="5" value="{complaintModel>/invRemarks}"/>
+                                </form:SimpleForm>
+                            </WizardStep>
+
+                            <WizardStep id="wizard_Recall" title="Recall">
+                                <form:SimpleForm editable="true" layout="ColumnLayout" >                              
+                                    <Label id="m" text="Recall Product"/>
+                                    <Switch state="{complaintModel>/recall}" customTextOn="Yes" customTextOff="No">
+                                    </Switch>
+                                    <Button icon="sap-icon://list" tooltip="Product Details" width="25%" visible="{= ${complaintModel>/recall}}" press="onShowDetailsPress"></Button>
+                                </form:SimpleForm>
+                            </WizardStep>
+
+                   
+                        </Wizard>
+                </content>
+            </Page>
+        </pages>
+    </App>
+</mvc:View>
