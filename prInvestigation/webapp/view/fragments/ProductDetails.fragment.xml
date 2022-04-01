@@ -4,7 +4,7 @@
 			<Button id="idMsgDia_button0" text="{i18n>Close}" press="handleCloseMessageDialog"/>
 		</endButton>
 		<content>
-			<Table id="idMessageItemsTable" inset="false" fixedLayout="false" items="{path: 'productBatchDetails>/', templateShareable:false}">
+			<Table id="idMessageItemsTable" inset="false" fixedLayout="false" items="{path: 'prodBatchDetails>/', templateShareable:false}">
 				<columns>
 					<Column id="idMsgDia_column0">
 						<Text id="idMsgDia_text0" text="Plant"/>
@@ -13,18 +13,18 @@
 						<Text id="idMsgDia_text1" text="Storage Location"/>
 					</Column>
 					<Column id="idMsgDia_column2">
-						<Text id="idMsgDia_text2" text="Quantity"/>
+						<Text id="idMsgDia_text2" text="Sold Quantity"/>
 					</Column>
 				</columns>
 				<items>
 					<ColumnListItem id="idMsgDia_columnlistitem0" >
 						<cells>
 							<ObjectStatus id="idMsgDia_objectstatus0" 
-								text="{productBatchDetails>/Plant}"/>							
+								text="{prodBatchDetails>/Plant}"/>							
 							<ObjectStatus id="idMsgDia_objectstatus2" 
-								text="{productBatchDetails>/SoldUnit}"/>
+								text="{prodBatchDetails>/SoldUnit}"/>
                                 <ObjectNumber id="idMsgDia_objectstatus1" 
-								number="{productBatchDetails>/SoldQuantity}"/>
+								number="{prodBatchDetails>/SoldQuantity}"/>
 						</cells>
 					</ColumnListItem>
 				</items>

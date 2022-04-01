@@ -34,6 +34,21 @@
 					"odataVersion": "2.0"
 				}
 			}
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "investigation-inbound": {
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "semanticObject": "pr_investigation",
+                    "action": "create",
+                    "title": "Create Investigation",
+                    "subTitle": "",
+                    "icon": "sap-icon://add"
+                }
+            }
         }
     },
     "sap.ui": {

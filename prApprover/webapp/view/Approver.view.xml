@@ -3,7 +3,15 @@
         <pages>
             <Page showHeader="false" showFooter="false" title="Approval for Investigation">
                 <content>
-                    <Text text="{context>/investigationData/investigationNumber}"/>
+                    <!-- <Text text="{context>/investigationData/investigationNumber}"/> -->
+                     <form:SimpleForm layout="ResponsiveLayout" editable="true" width="100%" maxContainerCols="1">
+                            <Label text="Complaint Number"/>
+                            <Text text="{context>/investigationData/complaintNumber/complaintNo}"/>
+                            <Label text="Investigation Number"/>
+                            <Text text="{context>/investigationData/investigationNumber}"/>
+                            <Label text="BATCH"/>
+                            <Text text="{context>/investigationData/complaintNumber/batch}"/>
+                        </form:SimpleForm>
                         <Table>
                             <columns>
                                 <Column>
@@ -13,7 +21,7 @@
                                     <Text text="Product"></Text>
                                 </Column>
                                 <Column>
-                                    <Text text="Quantity"></Text>
+                                    <Text text="Sold Quantity"></Text>
                                 </Column>
                             </columns>
                             <items>
@@ -25,14 +33,7 @@
                             </items>
                         </Table>
                     
-                        <form:SimpleForm layout="ResponsiveLayout" editable="true" width="100%" maxContainerCols="1">
-                            <Label text="Complaint Number"/>
-                            <Text text="{context>/investigationData/complaintNumber/complaintNo}"/>
-                            <Label text="Investigation Number"/>
-                            <Text text="{context>/investigationData/investigationNumber}"/>
-                            <Label text="BATCH"/>
-                            <Text text="{context>/investigationData/complaintNumber/batch}"/>
-                        </form:SimpleForm>
+                       
                 </content>
             </Page>
         </pages>

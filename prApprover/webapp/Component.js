@@ -38,7 +38,50 @@ sap.ui.define(
               type: "accept", // (Optional property) Define for positive appearance
             },
             function () {
-              this.completeTask(true);
+				var that = this;
+				var oDialog = new sap.m.Dialog({
+					title: 'Approval',
+					type: 'Message',
+					content: [
+						new sap.m.Label({
+							text: 'Kindly enter the reason of approval (optional).',
+							labelFor: 'submitDialogTextarea'
+						}),
+						new sap.m.TextArea('submitDialogTextarea', {
+							liveChange: function (oEvent) {
+								var sText = oEvent.getParameter('value');
+								var parent = oEvent.getSource().getParent();
+								parent.getBeginButton().setEnabled(sText.length > 0);
+							},
+							width: '100%',
+							placeholder: 'Approve note (required)'
+						})
+					],
+					beginButton: new sap.m.Button({
+						type: sap.m.ButtonType.Accept,
+						text: 'Approve',
+						enabled: true,
+						press: function () {
+							var sText = sap.ui.getCore().byId('submitDialogTextarea').getValue();
+							that.remarkText = sText;
+							sap.m.MessageToast.show('Note is: ' + sText);
+							oDialog.close();
+                            that.completeTask(true);
+						}
+					}),
+					endButton: new sap.m.Button({
+						text: 'Cancel',
+						press: function () {
+							oDialog.close();
+						}
+					}),
+					afterClose: function () {
+						oDialog.destroy();
+					}
+				});
+				oDialog.open();
+			
+              //this.completeTask(true);
             },
             this
           );
@@ -50,7 +93,51 @@ sap.ui.define(
               type: "reject", // (Optional property) Define for negative appearance
             },
             function () {
-              this.completeTask(false);
+                var that = this;
+                var oDialog = new sap.m.Dialog({
+                    title: 'Rejection',
+                    type: 'Message',
+                    content: [
+                        new sap.m.Label({
+                            text: 'Kindly enter the reason for rejection.',
+                            labelFor: 'submitDialogTextarea'
+                        }),
+                        new sap.m.TextArea('submitDialogTextarea', {
+                            liveChange: function (oEvent) {
+                                var sText = oEvent.getParameter('value');
+                                var parent = oEvent.getSource().getParent();
+                                parent.getBeginButton().setEnabled(sText.length > 0);
+                            },
+                            width: '100%',
+                            placeholder: 'Rejection note (required)'
+                        })
+                    ],
+                    beginButton: new sap.m.Button({
+                        type: sap.m.ButtonType.Reject,
+                        text: 'Reject',
+                        enabled: false,
+                        press: function () {
+                            var sText = sap.ui.getCore().byId('submitDialogTextarea').getValue();
+                            that.remarkText = sText;
+                            sap.m.MessageToast.show('Note is: ' + sText);
+                            oDialog.close();
+                            that.completeTask(false);
+                            
+                        }
+                    }),
+                    endButton: new sap.m.Button({
+                        text: 'Cancel',
+                        press: function () {
+                            oDialog.close();
+                        }
+                    }),
+                    afterClose: function () {
+                        oDialog.destroy();
+                    }
+                });
+                oDialog.open();
+            
+              //this.completeTask(false);
             },
             this
           );
@@ -94,7 +181,9 @@ sap.ui.define(
         },
 
         completeTask: function (approvalStatus) {
+            var that = this;
           this.getModel("context").setProperty("/approved", approvalStatus);
+          this.getModel("context").setProperty("/message", that.remarkText);
           this._patchTaskInstance();
           this._refreshTaskList();
         },

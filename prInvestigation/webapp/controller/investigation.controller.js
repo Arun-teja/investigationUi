@@ -144,8 +144,13 @@ sap.ui.define(
                     this.adata = this.createObjectForInvestigation(data); 
                     //this.createInvestigation(oEntryData);
                     if(oEntryData.recallRequired === true){
+                    this.getProductBatchData();
                     this.getBusinessRuleoData();
+                   }
+                    else{
+                        this.getBusinessRuleoData();//if recall required is not true, inorder to create investigation number
                     }
+
                     //         if(this.approvalData !== undefined){
                     // if (this.approvalData.length > 0) {
                     // 	//this._loadWorkFlowProcess(_oContext);
@@ -216,7 +221,8 @@ sap.ui.define(
                     if (data) {
                         aFilter.push(new Filter("MaterialNumber", FilterOperator.EQ, data.product));
                         aFilter.push(new Filter("Batch", FilterOperator.EQ, data.batch));
-                        this.getProductBatchData(aFilter, oEvent);
+                        //this.getProductBatchData(aFilter, oEvent);
+                        this.getProductBatchData();
                     }
         
                 },
@@ -245,41 +251,64 @@ sap.ui.define(
                     this._oMessagesDialog.close();
                 },
         
-                getProductBatchData: function (aFilters, oEvent) {
+                getProductBatchData: function () {
         
-                    var nodesModel = this.getView().getModel("productBatchDetails");
-                    if (typeof (nodesModel) === "undefined") {
-                        nodesModel = new JSONModel();
-                    }
-                    nodesModel.setData([]);
-                    this.getView().setModel(nodesModel, "productBatchDetails");
+                    // var nodesModel = this.getView().getModel("productBatchDetails");
+                    // if (typeof (nodesModel) === "undefined") {
+                    //     nodesModel = new JSONModel();
+                    // }
+                    // nodesModel.setData([]);
+                    // var arr = [];
+                    
+
+                    // var nodesModel = new JSONModel();
+                    // this.getView().setModel(nodesModel, "productBatchDetails");
         
+                    // var oModel = this.getOwnerComponent().getModel("prodRecall");
+        
+                    // var oHeaderPromise = new Promise(function (resolve, reject) {
+        
+                    //     oModel.read("/ProdRecallSet(MaterialNumber='TD000001',Batch='555')/Details", {
+                    //         //filters: aFilters,
+                    //         // urlParameters: {
+                    //         //     "$expand": "NAVMAT,NAVSOLD"
+                    //         // },
+                    //         success: function (oData, response) {
+                    //             console.log(oData);
+                    //             if (oData.results.length > 0) {
+                    //                 // nodesModel.setData(oData.results[0].NAVMAT.results);
+                    //                 // nodesModel.setData(oData.results[0]);
+                    //                 // arr.push(oData.results[0]);
+                    //                 // nodesModel.updateBindings(true);
+                    //                 this.getView().getModel("productBatchDetails").setData(oData.results[0]);
+                    //             }
+                    //             //   this._oMessagesDialog.openBy(oEvent.getSource());
+        
+                    //             resolve(oData);
+                    //             //this.getView().setModel(arr,"productBatchDetails");
+                    //         }.bind(this),
+                    //         error: function (oError) {
+                    //             this.handleErrorResponse(oError);
+                    //             reject(oError);
+                    //         }.bind(this)
+                    //     });
+                    // }.bind(this));
+                    var that = this;
                     var oModel = this.getOwnerComponent().getModel("prodRecall");
-        
-                    var oHeaderPromise = new Promise(function (resolve, reject) {
-        
-                        oModel.read("/ProdRecallSet(MaterialNumber='TD000001',Batch='555')/Details", {
-                            //filters: aFilters,
-                            // urlParameters: {
-                            //     "$expand": "NAVMAT,NAVSOLD"
-                            // },
-                            success: function (oData, response) {
-                                console.log(oData);
-                                if (oData.results.length > 0) {
-                                    // nodesModel.setData(oData.results[0].NAVMAT.results);
-                                    nodesModel.setData(oData.results[0]);
-                                    nodesModel.updateBindings(true);
-                                }
-                                //   this._oMessagesDialog.openBy(oEvent.getSource());
-        
-                                resolve(oData);
-                            }.bind(this),
-                            error: function (oError) {
-                                this.handleErrorResponse(oError);
-                                reject(oError);
-                            }.bind(this)
-                        });
-                    }.bind(this));
+                    var pModel = new sap.ui.model.json.JSONModel();
+                    this.getView().setModel(pModel,"prodBatchDetails");
+                    
+
+                    oModel.read("/ProdRecallSet(MaterialNumber='TD000001',Batch='555')/Details",{
+                        success: function(oData) {
+                            console.log(oData);
+                            that.getView().getModel("prodBatchDetails").setData(oData.results[0]);
+                        },
+                        error : function(){
+                            MessageBox.show("Error");
+                        }
+                    });
+
                 },
         
                 // Handle error response if any from HTTP call
@@ -330,16 +359,16 @@ sap.ui.define(
                     var oModel1 = this.getOwnerComponent().getModel("pModel");
                     var aModel = this.getView().getModel("complaintModel");
                     var data1 = aModel.getData();
-                    var aFilter = [];
+                    //var aFilter = [];
                     this.materialNo = data1.product;
                     this.batchNo = data1.batch;
-                    if (data1) {
-                        aFilter.push(new Filter("materialNumber", FilterOperator.EQ, data1.product));
-                        aFilter.push(new Filter("batchNumber", FilterOperator.EQ, data1.batch));
-                    }
+                    // if (data1) {
+                    //     aFilter.push(new Filter("materialNumber", FilterOperator.EQ, data1.product));
+                    //     aFilter.push(new Filter("batchNumber", FilterOperator.EQ, data1.batch));
+                    // }
                     //(companyCode = " + "*" + ")
                     oModel1.read("/approverTable", {
-                        filters: aFilter,
+                        //filters: aFilter,
                         success: function (oData, oResponse) {
                             //this._inObj.approvalData = [];
                                _oContext.aObj = [];
@@ -372,7 +401,7 @@ sap.ui.define(
                 onWFConform: function () {
                     var that = this;
                     this.initiatorData();
-                    var yModel = this.getView().getModel("productBatchDetails");
+                    var yModel = this.getView().getModel("prodBatchDetails");
                     var sdata =  yModel.getData();
                     var oModelData = this.getOwnerComponent().getModel("pModel");
                     var inputValue = {
