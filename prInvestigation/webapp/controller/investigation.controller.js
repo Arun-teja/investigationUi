@@ -28,6 +28,7 @@ sap.ui.define(
                     //         apiResponse: "",
                     //     })
                     // );
+                    this.getProductBatchData();
                 },
                 onComplaintNumberInput: function (oEvent) {
 
@@ -144,7 +145,7 @@ sap.ui.define(
                     this.adata = this.createObjectForInvestigation(data); 
                     //this.createInvestigation(oEntryData);
                     if(oEntryData.recallRequired === true){
-                    this.getProductBatchData();
+                    // this.getProductBatchData();
                     this.getBusinessRuleoData();
                    }
                     else{
@@ -423,7 +424,9 @@ sap.ui.define(
                             currentApproverName: null,
                             isFinalApprover: null,
                             hasNextApprover: null,
-                            currentApprover: null
+                            currentApprover: null,
+                            isInternal: null,
+                            isExternal: null
                         },
                         oData = {
                             definitionId: "prodrecallwf",
