@@ -3,8 +3,9 @@ sap.ui.define(
     "sap/ui/core/UIComponent",
     "sap/ui/Device",
     "com/pr/prApprover/model/models",
+    "sap/ui/core/format/DateFormat"
   ],
-  function (UIComponent, Device, models) {
+  function (UIComponent, Device, models,DateFormat) {
     "use strict";
 
     return UIComponent.extend(
@@ -62,8 +63,22 @@ sap.ui.define(
 						text: 'Approve',
 						enabled: true,
 						press: function () {
+                            var oFormat = DateFormat.getDateTimeInstance({style: "medium"});
+                            var sDate = oFormat.format(new Date());
 							var sText = sap.ui.getCore().byId('submitDialogTextarea').getValue();
-							that.remarkText = sText;
+                            // that.date = today1;
+							// that.remarkText = sText;
+                            var oEntry = {
+                                //productID: oObject.ProductID,
+                                type: "Approved",
+                                date: sDate,
+                                comment: sText
+                            };
+                            var sModel=  that.getModel("context");
+                           var sCom= sModel.getData().comments;
+                            var aEntry = sCom.push(oEntry);
+                            sModel.setData({comments:sCom});
+                            console.log(sModel);
 							sap.m.MessageToast.show('Note is: ' + sText);
 							oDialog.close();
                             that.completeTask(true);
@@ -85,7 +100,12 @@ sap.ui.define(
             },
             this
           );
-
+            // var level = this.getModel("context").getProperty("currentLevel");
+            // if(level > 1){
+                // var that = this;
+                // var lvl1 = that.getModel("context").getData();
+                // var lvl2 = lvl1.currentLevel;
+                // if(lvl2 > 1){
           this.getInboxAPI().addAction(
             {
               action: "REJECT",
@@ -94,6 +114,10 @@ sap.ui.define(
             },
             function () {
                 var that = this;
+                var level1 = that.getModel("context").getData();
+                    var lev2 = level1.currentLevel;
+                    console.log(lev2);
+                    if (lev2 >1){
                 var oDialog = new sap.m.Dialog({
                     title: 'Rejection',
                     type: 'Message',
@@ -117,8 +141,19 @@ sap.ui.define(
                         text: 'Reject',
                         enabled: false,
                         press: function () {
+                            var oFormat = DateFormat.getDateTimeInstance({style: "medium"});
+                            var sDate = oFormat.format(new Date());
                             var sText = sap.ui.getCore().byId('submitDialogTextarea').getValue();
-                            that.remarkText = sText;
+                            var oEntry = {
+                                type: "Sent back for more Information",
+                                date: sDate,
+                                comment: sText
+                            };
+                            var sModel=  that.getModel("context");
+                            var sCom= sModel.getData().comments;
+                             var aEntry = sCom.push(oEntry);
+                             sModel.setData({comments:sCom});
+                             console.log(sModel);
                             sap.m.MessageToast.show('Note is: ' + sText);
                             oDialog.close();
                             that.completeTask(false);
@@ -136,11 +171,15 @@ sap.ui.define(
                     }
                 });
                 oDialog.open();
-            
+                }
+                else{
+                    sap.m.MessageBox.error("As you are level 1 you can not Reject");
+                }
               //this.completeTask(false);
             },
             this
           );
+            //}
         },
 
         setTaskModels: function () {
@@ -183,7 +222,8 @@ sap.ui.define(
         completeTask: function (approvalStatus) {
             var that = this;
           this.getModel("context").setProperty("/approved", approvalStatus);
-          this.getModel("context").setProperty("/message", that.remarkText);
+        //   this.getModel("context").setProperty("/message", that.remarkText);
+        //   this.getModel("context").setProperty("/dateTime", that.date);
           this._patchTaskInstance();
           this._refreshTaskList();
         },
@@ -226,6 +266,7 @@ sap.ui.define(
         _refreshTaskList: function () {
           this.getInboxAPI().updateTask("NA", this.getTaskInstanceID());
         },
+        
       }
     );
   }

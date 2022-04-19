@@ -9,10 +9,14 @@
                             <Text text="{context>/investigationData/complaintNumber/complaintNo}"/>
                             <Label text="Investigation Number"/>
                             <Text text="{context>/investigationData/investigationNumber}"/>
-                            <Label text="BATCH"/>
-                            <Text text="{context>/investigationData/complaintNumber/batch}"/>
+                            <Label text="Recall Number"/>
+                            <Text text="{context>/investigationData/recallNumber}"/>
+                            <Label text="Class of Recall"/>
+                            <Text text="{context>/investigationData/class}"/>
+                            <!-- <Label text="BATCH"/>
+                            <Text text="{context>/investigationData/complaintNumber/batch}"/> -->
                         </form:SimpleForm>
-                        <Table>
+                        <Table items="{context>/productList}">
                             <columns>
                                 <Column>
                                     <Text text="Plant"></Text>
@@ -21,17 +25,59 @@
                                     <Text text="Product"></Text>
                                 </Column>
                                 <Column>
+                                    <Text text="Product Description"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="Batch"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="Stock In Hand"></Text>
+                                </Column>
+                                <Column>
                                     <Text text="Sold Quantity"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="SalesValue"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="Batch Expiry Date"></Text>
                                 </Column>
                             </columns>
                             <items>
                                 <ColumnListItem>
-                                    <Text text="{context>/Plant}"/>
-                                    <Text text="{context>/investigationData/product}"/>
-                                    <Text text="{context>/Quantity}"/>
+                                    <Text text="{context>Plant}"/>
+                                    <Text text="{context>MaterialNumber}"/>
+                                     <Text text="{context>MaterialDescription}"/>
+                                    <Text text="{context>Batch}"/>
+                                    <Text text="{context>StockInHand}"/>
+                                    <Text text="{context>SoldQuantity}"/>
+                                    <Text text="{context>SalesValue} {context>Currency}"/>
+                                    <Text text="{context>BatchExpDate}"/>
                                 </ColumnListItem>
                             </items>
                         </Table>
+                    
+                    <Panel class="sapUiContentPadding" headerText="Comments" expandable="true" width="auto" expanded="true">
+                            <content>
+                            <!-- <FeedInput post="onPost"/> -->
+                            <List
+                                id="idCommentsList"
+                                noDataText="No Comments"
+                                showSeparators="Inner"
+                                items="{
+                                    path: 'context>/comments',
+                                    sorter: {
+                                        path: 'date',
+                                        descending: true
+                                    }
+                                }">
+                                <FeedListItem
+                                    info="{context>type}"
+                                    text="{context>comment}"
+                                    timestamp="{context>date}"/>
+                            </List>
+                            </content>
+                    </Panel>
                     
                        
                 </content>

@@ -10,7 +10,7 @@
 						<Text id="idMsgDia_text0" text="Plant"/>
 					</Column>
 					<Column id="idMsgDia_column1">
-						<Text id="idMsgDia_text1" text="Storage Location"/>
+						<Text id="idMsgDia_text1" text="Stock in Hand"/>
 					</Column>
 					<Column id="idMsgDia_column2">
 						<Text id="idMsgDia_text2" text="Sold Quantity"/>
@@ -20,11 +20,11 @@
 					<ColumnListItem id="idMsgDia_columnlistitem0" >
 						<cells>
 							<ObjectStatus id="idMsgDia_objectstatus0" 
-								text="{prodBatchDetails>/Plant}"/>							
+								text="{prodBatchDetails>Plant}"/>							
 							<ObjectStatus id="idMsgDia_objectstatus2" 
-								text="{prodBatchDetails>/SoldUnit}"/>
+								text="{prodBatchDetails>StockInHand}"/>
                                 <ObjectNumber id="idMsgDia_objectstatus1" 
-								number="{prodBatchDetails>/SoldQuantity}"/>
+								number="{prodBatchDetails>SoldQuantity}"/>
 						</cells>
 					</ColumnListItem>
 				</items>

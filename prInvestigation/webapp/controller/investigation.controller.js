@@ -28,7 +28,7 @@ sap.ui.define(
                     //         apiResponse: "",
                     //     })
                     // );
-                    this.getProductBatchData();
+                    //this.getProductBatchData();
                 },
                 onComplaintNumberInput: function (oEvent) {
 
@@ -41,7 +41,8 @@ sap.ui.define(
                     oCompModel.setData({
                         invStartDate: null,
                         invEndDate: null,
-                        recall: false
+                        recall: false,
+                        class: null
                     });
         
                     var aFilter = [];
@@ -69,6 +70,7 @@ sap.ui.define(
                                     oData.results[0].invStartDate = null;
                                     oData.results[0].invEndDate = null;
                                     oData.results[0].recall = false;
+                                    oData.results[0].class = null;
                                     complaModel.setData(oData.results[0]);
                                     complaModel.updateBindings(true);
                                 } else {
@@ -97,7 +99,8 @@ sap.ui.define(
                         startDate: data.invStartDate,
                         endDate: data.invEndDate,
                         investigator: data.investigationBy,
-                        remarks: data.invRemarks
+                        remarks: data.invRemarks,
+                        class: data.class
                     };
         
                     return invObject;
@@ -142,6 +145,7 @@ sap.ui.define(
                     }
         
                     var oEntryData = this.createObjectForInvestigation(data);
+                    console.log(oEntryData);
                     this.adata = this.createObjectForInvestigation(data); 
                     //this.createInvestigation(oEntryData);
                     if(oEntryData.recallRequired === true){
@@ -184,7 +188,8 @@ sap.ui.define(
                                         oCompModel.setData({
                                             invStartDate: null,
                                             invEndDate: null,
-                                            recall: false
+                                            recall: false,
+                                            class: null
                                         });
                                         var that = this;
                                         // var token = that._fetchToken();
@@ -218,6 +223,7 @@ sap.ui.define(
                     var data = nodesModel.getData();
                     var aFilter = [];
                     this.handleDisplayProductPress(oEvent);
+
         
                     if (data) {
                         aFilter.push(new Filter("MaterialNumber", FilterOperator.EQ, data.product));
@@ -295,15 +301,37 @@ sap.ui.define(
                     //     });
                     // }.bind(this));
                     var that = this;
+                    var sModel= this.getView().getModel("complaintModel");
+                    var mProduct = sModel.getData().product;
+                    console.log(mProduct);
                     var oModel = this.getOwnerComponent().getModel("prodRecall");
                     var pModel = new sap.ui.model.json.JSONModel();
                     this.getView().setModel(pModel,"prodBatchDetails");
                     
 
-                    oModel.read("/ProdRecallSet(MaterialNumber='TD000001',Batch='555')/Details",{
+                    oModel.read("/ProdRecallSet(MaterialNumber='" + mProduct + "')/Details",{
                         success: function(oData) {
                             console.log(oData);
-                            that.getView().getModel("prodBatchDetails").setData(oData.results[0]);
+                             that.pData = [];
+                            if(oData.results.length > 0){
+                                for (var i=0; i< oData.results.length; i++){
+                                    var bData= {
+                                    "MaterialNumber" : oData.results[i].MaterialNumber,
+                                    "MaterialDescription": oData.results[i].MaterialDescription,
+                                    "Batch" : oData.results[i].Batch,
+                                    "Plant" : oData.results[i].Plant,
+                                    "StockInHand": oData.results[i].StockInHand,
+                                    "SoldQuantity": oData.results[i].SoldQuantity,
+                                    "SoldUnit": oData.results[i].SoldUnit,
+                                    "SalesOrder": oData.results[i].SalesOrder,
+                                    "SalesValue": oData.results[i].SalesValue,
+                                    "BatchExpDate": oData.results[i].BatchExpDate,
+                                    "Currency":oData.results[i].Currency
+                                    }
+                                    that.pData.push(bData);
+                                }
+                            }
+                            that.getView().getModel("prodBatchDetails").setData(oData.results);
                         },
                         error : function(){
                             MessageBox.show("Error");
@@ -356,6 +384,7 @@ sap.ui.define(
                     return sErrMsg;
                 },
                 getBusinessRuleoData: function () {
+                    this.getProductBatchData();
                     var _oContext = this;
                     var oModel1 = this.getOwnerComponent().getModel("pModel");
                     var aModel = this.getView().getModel("complaintModel");
@@ -401,16 +430,18 @@ sap.ui.define(
         
                 onWFConform: function () {
                     var that = this;
+                    var array = [];
                     this.initiatorData();
-                    var yModel = this.getView().getModel("prodBatchDetails");
-                    var sdata =  yModel.getData();
+                    // var yModel = this.getView().getModel("prodBatchDetails");
+                    // var sdata =  yModel.getData();
                     var oModelData = this.getOwnerComponent().getModel("pModel");
                     var inputValue = {
+                            comments: array,
                             investigationNumber: that.investigation_No,
-                            materialNumber: that.materialNo,
-                            batchNumber: that.batchNo,
-                            Plant: sdata.Plant,
-                            Quantity: sdata.SoldQuantity,
+                            // materialNumber: that.materialNo,
+                            // batchNumber: that.batchNo,
+                            // Plant: sdata.Plant,
+                            // Quantity: sdata.SoldQuantity,
                             // description: oModelData.projectDescription,
                             // version: oModelData.version,
                             //	planId: sPlanId,
@@ -418,6 +449,7 @@ sap.ui.define(
                             initiatorName: that.initiatorName,
                             //	approversList: this.__gObject._approversList,
                             approversList: that.aObj,
+                            productList: that.pData,
                             //added by purva to get dynamic url for notification mail
                             //	configTableURL: _oContext.__gObject.configTableURLValue,
                             isApproved: null,
