@@ -54,7 +54,7 @@
                                     <Switch state="{complaintModel>/recall}" customTextOn="Yes" customTextOff="No">
                                     </Switch>
                                     <Label  text ="Class of Recall"/>
-                                    <Select id="class" selectedKey="{complaintModel>/class}">
+                                    <Select id="class" selectedKey="{complaintModel>/class}" showSecondaryValues= "true" visible="{= ${complaintModel>/recall}}" liveChange="onLiveChange">
                                         <core:ListItem key="class0" text=" " additionalText=" "/>
                                         <core:ListItem key="class1" text="class1" additionalText="Product recall process shall be initiated within 24 hrs "/>
                                         <core:ListItem key="class2" text="class2" additionalText="Product recall process shall be initiated within 24 to 72 hrs"/>

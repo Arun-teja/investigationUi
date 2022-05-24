@@ -427,6 +427,11 @@ sap.ui.define(
                         }
                     });
                 },
+                onLiveChange : function(oEvent){
+                        var sClass = oEvent.getSelectedItem();
+                        console.log(sClass);
+
+                },
         
                 onWFConform: function () {
                     var that = this;
@@ -458,7 +463,8 @@ sap.ui.define(
                             hasNextApprover: null,
                             currentApprover: null,
                             isInternal: null,
-                            isExternal: null
+                            isExternal: null,
+                            period : null
                         },
                         oData = {
                             definitionId: "prodrecallwf",

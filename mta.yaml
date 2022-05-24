@@ -20,15 +20,15 @@ modules:
     content:
       subaccount:
         destinations:
-        - Name: Precall_prUI_html_repo_host
+        - Name: Prodrecall_prUI_html_repo_host
           ServiceInstanceName: prUI-html5-app-host-service
           ServiceKeyName: prUI_html_repo_host-key
-          sap.cloud.service: Precall
+          sap.cloud.service: Prodrecall
         - Authentication: OAuth2UserTokenExchange
-          Name: Precall_uaa_prUI
+          Name: Prodrecall_uaa_prUI
           ServiceInstanceName: prUI-xsuaa-service
           ServiceKeyName: uaa_prUI-key
-          sap.cloud.service: Precall
+          sap.cloud.service: Prodrecall
         existing_destinations_policy: ignore
   build-parameters:
     no-source: true

@@ -157,6 +157,6 @@
     },
     "sap.cloud": {
         "public": true,
-        "service": "Precall"
+        "service": "Prodrecall"
     }
 }
