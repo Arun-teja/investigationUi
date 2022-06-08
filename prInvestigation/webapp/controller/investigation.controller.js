@@ -28,7 +28,7 @@ sap.ui.define(
                     //         apiResponse: "",
                     //     })
                     // );
-                    //this.getProductBatchData();
+                    // this.getProductBatchData();
                 },
                 onComplaintNumberInput: function (oEvent) {
 
@@ -226,10 +226,14 @@ sap.ui.define(
 
         
                     if (data) {
+                        if(data.batch != null){
                         aFilter.push(new Filter("MaterialNumber", FilterOperator.EQ, data.product));
                         aFilter.push(new Filter("Batch", FilterOperator.EQ, data.batch));
-                        //this.getProductBatchData(aFilter, oEvent);
-                        this.getProductBatchData();
+                        }else{
+                            aFilter.push(new Filter("MaterialNumber", FilterOperator.EQ, data.product));  
+                        }
+                        this.getProductBatchData(aFilter, oEvent);
+                        //this.getProductBatchData();
                     }
         
                 },
@@ -258,7 +262,7 @@ sap.ui.define(
                     this._oMessagesDialog.close();
                 },
         
-                getProductBatchData: function () {
+                getProductBatchData: function (aFilters, oEvent) {
         
                     // var nodesModel = this.getView().getModel("productBatchDetails");
                     // if (typeof (nodesModel) === "undefined") {
@@ -301,16 +305,17 @@ sap.ui.define(
                     //     });
                     // }.bind(this));
                     var that = this;
-                    var sModel= this.getView().getModel("complaintModel");
-                    var mProduct = sModel.getData().product;
-                    console.log(mProduct);
+                    // var sModel= this.getView().getModel("complaintModel");
+                    // var mProduct = sModel.getData().product;
+                    // console.log(mProduct);
                     var oModel = this.getOwnerComponent().getModel("prodRecall");
                     var pModel = new sap.ui.model.json.JSONModel();
                     this.getView().setModel(pModel,"prodBatchDetails");
                     
 
-                    oModel.read("/ProdRecallSet(MaterialNumber='" + mProduct + "')/Details",{
-                        success: function(oData) {
+                    oModel.read("/ProdRecallSet",{
+                        filters: aFilters,
+                        success: function(oData,response) {
                             console.log(oData);
                              that.pData = [];
                             if(oData.results.length > 0){
@@ -384,7 +389,7 @@ sap.ui.define(
                     return sErrMsg;
                 },
                 getBusinessRuleoData: function () {
-                    this.getProductBatchData();
+                    // this.getProductBatchData();
                     var _oContext = this;
                     var oModel1 = this.getOwnerComponent().getModel("pModel");
                     var aModel = this.getView().getModel("complaintModel");

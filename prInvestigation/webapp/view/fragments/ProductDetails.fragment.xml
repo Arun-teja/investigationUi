@@ -9,22 +9,37 @@
 					<Column id="idMsgDia_column0">
 						<Text id="idMsgDia_text0" text="Plant"/>
 					</Column>
-					<Column id="idMsgDia_column1">
-						<Text id="idMsgDia_text1" text="Stock in Hand"/>
+                    <Column id="idMsgDia_column1">
+						<Text id="idMsgDia_text1" text="Product"/>
 					</Column>
-					<Column id="idMsgDia_column2">
-						<Text id="idMsgDia_text2" text="Sold Quantity"/>
+                    <Column id="idMsgDia_column2">
+						<Text id="idMsgDia_text2" text="Batch"/>
+					</Column>
+					<Column id="idMsgDia_column3">
+						<Text id="idMsgDia_text3" text="Stock in Hand"/>
+					</Column>
+					<Column id="idMsgDia_column4">
+						<Text id="idMsgDia_text4" text="Sold Quantity"/>
+					</Column>
+                    <Column id="idMsgDia_column5">
+						<Text id="idMsgDia_text5" text="Sale value"/>
 					</Column>
 				</columns>
 				<items>
 					<ColumnListItem id="idMsgDia_columnlistitem0" >
 						<cells>
 							<ObjectStatus id="idMsgDia_objectstatus0" 
-								text="{prodBatchDetails>Plant}"/>							
-							<ObjectStatus id="idMsgDia_objectstatus2" 
+								text="{prodBatchDetails>Plant}"/>	
+                            <ObjectStatus id="idMsgDia_objectstatus1" 
+								text="{prodBatchDetails>MaterialNumber}"/>	
+                            <ObjectStatus id="idMsgDia_objectstatus2" 
+								text="{prodBatchDetails>Batch}"/>					
+							<ObjectStatus id="idMsgDia_objectstatus3" 
 								text="{prodBatchDetails>StockInHand}"/>
-                                <ObjectNumber id="idMsgDia_objectstatus1" 
+                                <ObjectNumber id="idMsgDia_objectstatus4" 
 								number="{prodBatchDetails>SoldQuantity}"/>
+                                 <ObjectNumber id="idMsgDia_objectstatus5" 
+								number="{prodBatchDetails>SalesValue}"/>
 						</cells>
 					</ColumnListItem>
 				</items>
