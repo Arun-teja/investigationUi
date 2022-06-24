@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-	<ResponsivePopover id="idMsgDia_responsivepopover0" title="{i18n>Prouct Batch Details}" placement="Auto">
+	<ResponsivePopover id="idMsgDia_responsivepopover0" title="Product Batch Details" placement="Auto">
 		<endButton>
 			<Button id="idMsgDia_button0" text="{i18n>Close}" press="handleCloseMessageDialog"/>
 		</endButton>

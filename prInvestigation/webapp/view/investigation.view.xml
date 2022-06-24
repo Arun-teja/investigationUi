@@ -10,7 +10,7 @@
                             <WizardStep id="wizard_Complaints" title="Complaint">
                                 <form:SimpleForm editable="true" layout="ColumnLayout">
                                     <Label id="a" text="{i18n>compNum}"/>
-                                    <Input id="complaintNumber" change="onComplaintNumberInput" required="true"/>
+                                    <Input id="complaintNumber" change="onComplaintNumberInput" required="true" showValueHelp="true" valueHelpRequest="onhandleValueHelpName"/>
                                     <!-- <Button id= "testBtn" text="testTrigger " press="onBtnPress"></Button> -->
                                 </form:SimpleForm>
                                 <form:SimpleForm editable="true" layout="ColumnLayout">

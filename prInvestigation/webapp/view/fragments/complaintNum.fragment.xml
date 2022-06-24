@@ -1,0 +1,104 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<!-- <SelectDialog 
+	id="compNum"
+		title="Select Complaint Nunmber"
+		class="sapUiPopupWithPadding"
+		items="{compmodel>/}"
+		search="handleSearchName"
+		confirm="confirmComplaintNum"
+		cancel="cancelvaluehelp"
+		multiSelect="false"> -->
+		<!--<StandardListItem-->
+		<!--title="{fnamemodel>formalName}" description="{fnamemodel>personIdExternal}-{fnamemodel>jobTitle}" />-->
+		<!-- <StandardListItem
+		title="{compmodel>complaintNo}"  /> -->
+        <!-- <Table id="idMessageItemsTable" inset="false" fixedLayout="false" items="{path: 'compmodel>/', templateShareable:false}">
+				<columns>
+					<Column id="idMsgDia_column0">
+						<Text id="idMsgDia_text0" text="Complaint Number"/>
+					</Column>
+                    <Column id="idMsgDia_column1">
+						<Text id="idMsgDia_text1" text="Complaint Date"/>
+					</Column>
+                    <Column id="idMsgDia_column2">
+						<Text id="idMsgDia_text2" text="Product "/>
+					</Column>
+					<Column id="idMsgDia_column3">
+						<Text id="idMsgDia_text3" text="Batch"/>
+					</Column>
+					<Column id="idMsgDia_column4">
+						<Text id="idMsgDia_text4" text="Type of Complaint"/>
+					</Column>
+				</columns> -->
+				<!-- <items>
+					<ColumnListItem id="idMsgDia_columnlistitem0" >
+						<cells>
+							<ObjectStatus id="idMsgDia_objectstatus0" 
+								text="{compmodel>complaintNo}"/>	
+                            <ObjectStatus id="idMsgDia_objectstatus1" 
+								text="{compmodel>complaintDate}"/>	
+                            <ObjectStatus id="idMsgDia_objectstatus2" 
+								text="{compmodel>product}"/>					
+							<ObjectStatus id="idMsgDia_objectstatus3" 
+								text="{compmodel>batch}"/>
+                                <ObjectNumber id="idMsgDia_objectstatus4" 
+								number="{compmodel>typeOfComplaint_code}"/>
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table> -->
+	<!-- </SelectDialog> -->
+    <TableSelectDialog
+		noDataText="No Complaints Found"
+		title="Select Complaint Number"
+		search=".handleSearch"
+		confirm="confirmComplaintNum"
+		cancel="cancelvaluehelp"
+		showClearButton="true"
+		items="{compmodel>/}">
+		<ColumnListItem >
+			<cells>
+				<Text text="{compmodel>complaintNo}" />
+				<Text text="{compmodel>createdAt }" />
+				<Text text="{compmodel>product}" />
+                <Text text="{compmodel>batch}" />
+                <Text text="{compmodel>typeOfComplaint_code}" />
+			</cells>
+		</ColumnListItem>
+		<columns>
+			<Column width="12em">
+				<header>
+					<Text text="Complaint Number" />
+				</header>
+			</Column>
+			<Column minScreenWidth="Tablet" demandPopin="true">
+				<header>
+					<Text text="Complaint Date" />
+				</header>
+			</Column>
+			<Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="End">
+				<header>
+					<Text text="Product" />
+				</header>
+			</Column>
+			<Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="End">
+				<header>
+					<Text text="Batch" />
+				</header>
+			</Column>
+			<Column hAlign="End">
+				<header>
+					<Text text="Type of Complaint" />
+				</header>
+			</Column>
+		</columns>
+	</TableSelectDialog>
+</core:FragmentDefinition>

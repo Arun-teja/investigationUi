@@ -5,12 +5,13 @@ sap.ui.define(
 	"sap/m/MessageBox",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
-	"sap/ui/core/Fragment"],
+	"sap/ui/core/Fragment",
+    "sap/ui/core/format/DateFormat"],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
     function (Controller, JSONModel, MessageToast, MessageBox, Filter,
-        FilterOperator, Fragment) {
+        FilterOperator, Fragment,DateFormat) {
         "use strict";
 
         return Controller.extend(
@@ -30,10 +31,51 @@ sap.ui.define(
                     // );
                     // this.getProductBatchData();
                 },
+
+                onhandleValueHelpName : function(){
+                    this.compNumber = this.getView().byId("complaintNumber");
+                    var that = this;
+                    var oView = this.getView();
+                    this.oDialog =oView.byId("compNum");
+                    if(! this.oDialog){
+                        this.oDialog = sap.ui.xmlfragment(oView.getId(),"com.pr.prInvestigation.view.fragments.complaintNum",this);
+                        oView.addDependent(this.oDialog);
+                    }
+                    var sFilter =[];
+                    sFilter.push(new Filter("status_code", FilterOperator.Contains, "new"));
+                    var aModel = this.getOwnerComponent().getModel("pModel");
+                    var compmodel = new sap.ui.model.json.JSONModel();
+                    this.getView().setModel(compmodel, "compmodel");
+                    aModel.read("/Complaints",{
+                        filters: sFilter,
+                        success:function(oData,oResponse){
+                            that.getView().getModel("compmodel").setData(oData.results);
+                            //MessageBox.show("Success");
+                            that.oDialog.open();
+                        },
+                        error: function (oError) {
+                            MessageBox.show("Error");
+                        }
+                    });
+
+                },
+                confirmComplaintNum:function(oEvent){
+                    //var aContexts = oEvent.getParameter("selectedContexts");
+                    var aContexts = oEvent.getSource()._aSelectedItems;
+                    var oVal1 = aContexts[0].mAggregations["cells"][0].getText();
+                    // var spath = aContexts[0].sPath.split("/")[1];
+                    // var oSelectedItem = oEvent.getParameter("selectedItem").getTitle();
+                    this.compNumber.setValue(oVal1);
+                    oEvent.getSource().destroy();
+                    this.onComplaintNumberInput();
+                },
+                cancelvaluehelp: function (oEvent) {
+                    oEvent.getSource().destroy();
+                },
                 onComplaintNumberInput: function (oEvent) {
 
-                    var complaintNo = oEvent.getParameter("value");
-        
+                    //var complaintNo = oEvent.getParameter("value");
+                    var complaintNo = this.getView().byId("complaintNumber").getValue();
                     var oCompModel = this.getView().getModel("complaintModel");
                     if (typeof (oCompModel) === "undefined") {
                         oCompModel = new JSONModel();
@@ -445,23 +487,14 @@ sap.ui.define(
                     // var yModel = this.getView().getModel("prodBatchDetails");
                     // var sdata =  yModel.getData();
                     var oModelData = this.getOwnerComponent().getModel("pModel");
+                    var oFormat = DateFormat.getDateTimeInstance({style: "medium"});
                     var inputValue = {
                             comments: array,
                             investigationNumber: that.investigation_No,
-                            // materialNumber: that.materialNo,
-                            // batchNumber: that.batchNo,
-                            // Plant: sdata.Plant,
-                            // Quantity: sdata.SoldQuantity,
-                            // description: oModelData.projectDescription,
-                            // version: oModelData.version,
-                            //	planId: sPlanId,
                             initiatorEmail: that.initiatorMail,
                             initiatorName: that.initiatorName,
-                            //	approversList: this.__gObject._approversList,
                             approversList: that.aObj,
                             productList: that.pData,
-                            //added by purva to get dynamic url for notification mail
-                            //	configTableURL: _oContext.__gObject.configTableURLValue,
                             isApproved: null,
                             currentApproverName: null,
                             isFinalApprover: null,
@@ -469,7 +502,8 @@ sap.ui.define(
                             currentApprover: null,
                             isInternal: null,
                             isExternal: null,
-                            period : null
+                            period : null,
+                            date : oFormat.format(new Date())
                         },
                         oData = {
                             definitionId: "prodrecallwf",
