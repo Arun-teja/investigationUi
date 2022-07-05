@@ -20,7 +20,7 @@
         }
       },
       "productrecall": {
-        "uri": "PR_SERVICE/v2/productrecall/",
+        "uri": "v2/productrecall/",
         "type": "OData",
         "settings": {
             "odataVersion": "2.0",
@@ -69,7 +69,7 @@
         "preload": true,
         "settings": {}
       },
-      "sModel":{
+      "aModel":{
         "dataSource": "productrecall",
         "preload": true,
         "settings": {

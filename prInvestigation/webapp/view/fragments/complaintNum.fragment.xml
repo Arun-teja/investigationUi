@@ -61,7 +61,7 @@
 		<ColumnListItem >
 			<cells>
 				<Text text="{compmodel>complaintNo}" />
-				<Text text="{compmodel>createdAt }" />
+				<Text text="{compmodel>createdAt}" />
 				<Text text="{compmodel>product}" />
                 <Text text="{compmodel>batch}" />
                 <Text text="{compmodel>typeOfComplaint_code}" />

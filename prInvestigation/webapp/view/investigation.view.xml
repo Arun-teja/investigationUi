@@ -64,7 +64,7 @@
                                         <core:Item key="class2" text="class2"/>
                                         <core:Item key="class3" text="class3"/> -->
 							        </Select>
-                                    <Button icon="sap-icon://list" tooltip="Product Details" width="25%" visible="{= ${complaintModel>/recall}}" press="onShowDetailsPress"></Button>
+                                    <Button icon="sap-icon://list" text="Product Details" tooltip="Product Details" width="25%" visible="{= ${complaintModel>/recall}}" press="onShowDetailsPress"></Button>
                                 </form:SimpleForm>
                             </WizardStep>
 

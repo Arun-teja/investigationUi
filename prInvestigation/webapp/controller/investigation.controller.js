@@ -1,17 +1,17 @@
 sap.ui.define(
     ["sap/ui/core/mvc/Controller",
-    "sap/ui/model/json/JSONModel",
-	"sap/m/MessageToast",
-	"sap/m/MessageBox",
-	"sap/ui/model/Filter",
-	"sap/ui/model/FilterOperator",
-	"sap/ui/core/Fragment",
-    "sap/ui/core/format/DateFormat"],
+        "sap/ui/model/json/JSONModel",
+        "sap/m/MessageToast",
+        "sap/m/MessageBox",
+        "sap/ui/model/Filter",
+        "sap/ui/model/FilterOperator",
+        "sap/ui/core/Fragment",
+        "sap/ui/core/format/DateFormat"],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
     function (Controller, JSONModel, MessageToast, MessageBox, Filter,
-        FilterOperator, Fragment,DateFormat) {
+        FilterOperator, Fragment, DateFormat) {
         "use strict";
 
         return Controller.extend(
@@ -32,23 +32,23 @@ sap.ui.define(
                     // this.getProductBatchData();
                 },
 
-                onhandleValueHelpName : function(){
+                onhandleValueHelpName: function () {
                     this.compNumber = this.getView().byId("complaintNumber");
                     var that = this;
                     var oView = this.getView();
-                    this.oDialog =oView.byId("compNum");
-                    if(! this.oDialog){
-                        this.oDialog = sap.ui.xmlfragment(oView.getId(),"com.pr.prInvestigation.view.fragments.complaintNum",this);
+                    this.oDialog = oView.byId("compNum");
+                    if (!this.oDialog) {
+                        this.oDialog = sap.ui.xmlfragment(oView.getId(), "com.pr.prInvestigation.view.fragments.complaintNum", this);
                         oView.addDependent(this.oDialog);
                     }
-                    var sFilter =[];
+                    var sFilter = [];
                     sFilter.push(new Filter("status_code", FilterOperator.Contains, "new"));
                     var aModel = this.getOwnerComponent().getModel("pModel");
                     var compmodel = new sap.ui.model.json.JSONModel();
                     this.getView().setModel(compmodel, "compmodel");
-                    aModel.read("/Complaints",{
+                    aModel.read("/Complaints", {
                         filters: sFilter,
-                        success:function(oData,oResponse){
+                        success: function (oData, oResponse) {
                             that.getView().getModel("compmodel").setData(oData.results);
                             //MessageBox.show("Success");
                             that.oDialog.open();
@@ -59,7 +59,7 @@ sap.ui.define(
                     });
 
                 },
-                confirmComplaintNum:function(oEvent){
+                confirmComplaintNum: function (oEvent) {
                     //var aContexts = oEvent.getParameter("selectedContexts");
                     var aContexts = oEvent.getSource()._aSelectedItems;
                     var oVal1 = aContexts[0].mAggregations["cells"][0].getText();
@@ -86,22 +86,22 @@ sap.ui.define(
                         recall: false,
                         class: null
                     });
-        
+
                     var aFilter = [];
                     if (complaintNo !== "") {
                         aFilter.push(new Filter("complaintNo", FilterOperator.EQ, complaintNo));
-        
+
                         this.getComplaintData(aFilter, oCompModel);
                     }
                 },
-        
+
                 getComplaintData: function (aFilters, complaModel) {
-        
+
                     var oModel = this.getOwnerComponent().getModel("pModel");
                     complaModel.setData([]);
-        
+
                     var oHeaderPromise = new Promise(function (resolve, reject) {
-        
+
                         oModel.read("/Complaints", {
                             filters: aFilters,
                             urlParameters: {
@@ -119,7 +119,7 @@ sap.ui.define(
                                     MessageToast.show("Complaint Number is not available")
                                 }
                                 this.getView().setModel(complaModel, "complaintModel");
-        
+
                                 resolve(oData);
                             }.bind(this),
                             error: function (oError) {
@@ -129,9 +129,9 @@ sap.ui.define(
                         });
                     }.bind(this));
                 },
-        
+
                 createObjectForInvestigation: function (data) {
-        
+
                     var invObject = {
                         investigationNumber: "%0000001",
                         product: data.product,
@@ -144,21 +144,21 @@ sap.ui.define(
                         remarks: data.invRemarks,
                         class: data.class
                     };
-        
+
                     return invObject;
-        
+
                 },
-        
+
                 validateInputFields: function () {
-        
+
                     var aInpFieldsToValidate = [];
                     var oView = this.getView();
                     var bError = false;
                     aInpFieldsToValidate.push("investigationStartDate", "investigationEndDate");
-        
+
                     var validateMandatoryInputFields = x => {
                         var columnToBeValidated = oView.byId(x);
-        
+
                         if (columnToBeValidated.getValueState() === sap.ui.core.ValueState.Error) {
                             bError = true;
                         }
@@ -166,9 +166,9 @@ sap.ui.define(
                     aInpFieldsToValidate.forEach(validateMandatoryInputFields);
                     return bError;
                 },
-        
+
                 onCreateInvestigation: function (nodesModel) {
-        
+
                     var nodesModel = this.getView().getModel("complaintModel");
                     if (!nodesModel || !nodesModel.getData().ID) {
                         MessageToast.show("Please check Complaint Number");
@@ -179,22 +179,22 @@ sap.ui.define(
                         MessageToast.show("Enter value for mandatory fields to continue");
                         return;
                     }
-        
+
                     //Validation if the Complaint staus is not new.
                     if (data.status_code !== "new") {
                         MessageToast.show("Complaint already processed. Can't be assigned.");
                         return;
                     }
-        
+
                     var oEntryData = this.createObjectForInvestigation(data);
                     console.log(oEntryData);
-                    this.adata = this.createObjectForInvestigation(data); 
+                    this.adata = this.createObjectForInvestigation(data);
                     //this.createInvestigation(oEntryData);
-                    if(oEntryData.recallRequired === true){
-                    // this.getProductBatchData();
-                    this.getBusinessRuleoData();
-                   }
-                    else{
+                    if (oEntryData.recallRequired === true) {
+                        // this.getProductBatchData();
+                        this.getBusinessRuleoData();
+                    }
+                    else {
                         this.getBusinessRuleoData();//if recall required is not true, inorder to create investigation number
                     }
 
@@ -204,22 +204,22 @@ sap.ui.define(
                     // 	this.onWFConform();
                     // } else {
                     // 	sap.m.MessageBox.error("No Busineess Rule defined for the Company Code and Project/ Department.");
-        
+
                     // }
                     //         }
                 },
-        
+
                 createInvestigation: function (oEntryData, index = "1") {
-        
+
                     var oDataModel = this.getOwnerComponent().getModel("pModel");
                     return new Promise(function (resolve, reject) {
-        
+
                         oDataModel.create("/Investigations", oEntryData, {
                             changeSetId: index.toString(),
                             success: function (oData, response) {
                                 var sMessage = "Investigation created successfully : " + oData.investigationNumber;
                                 this.investigation_No = oData.investigationNumber;
-                                this.recall_req = oData.recallRequired;         
+                                this.recall_req = oData.recallRequired;
                                 if (oData.recallNumber.length > 0) {
                                     sMessage = sMessage.concat("\n", "Recall Number generated successfully : ", oData.recallNumber);
                                 }
@@ -257,33 +257,33 @@ sap.ui.define(
                             }.bind(this)
                         });
                     }.bind(this));
-        
+
                 },
-        
+
                 onShowDetailsPress: function (oEvent) {
                     var nodesModel = this.getView().getModel("complaintModel");
                     var data = nodesModel.getData();
                     var aFilter = [];
                     this.handleDisplayProductPress(oEvent);
 
-        
+
                     if (data) {
-                        if(data.batch != null){
-                        aFilter.push(new Filter("MaterialNumber", FilterOperator.EQ, data.product));
-                        aFilter.push(new Filter("Batch", FilterOperator.EQ, data.batch));
-                        }else{
-                            aFilter.push(new Filter("MaterialNumber", FilterOperator.EQ, data.product));  
+                        if (data.batch != null) {
+                            aFilter.push(new Filter("MaterialNumber", FilterOperator.EQ, data.product));
+                            aFilter.push(new Filter("Batch", FilterOperator.EQ, data.batch));
+                        } else {
+                            aFilter.push(new Filter("MaterialNumber", FilterOperator.EQ, data.product));
                         }
                         this.getProductBatchData(aFilter, oEvent);
                         //this.getProductBatchData();
                     }
-        
+
                 },
-        
+
                 handleDisplayProductPress: function (oEvent) {
-        
+
                     var oBtn = oEvent.getSource();
-        
+
                     if (!this._oMessagesDialog) {
                         Fragment.load({
                             name: "com.pr.prInvestigation.view.fragments.ProductDetails",
@@ -298,29 +298,29 @@ sap.ui.define(
                         this._oMessagesDialog.openBy(oBtn);
                     }
                 },
-        
+
                 //Method to get close message dialog
                 handleCloseMessageDialog: function () {
                     this._oMessagesDialog.close();
                 },
-        
+
                 getProductBatchData: function (aFilters, oEvent) {
-        
+
                     // var nodesModel = this.getView().getModel("productBatchDetails");
                     // if (typeof (nodesModel) === "undefined") {
                     //     nodesModel = new JSONModel();
                     // }
                     // nodesModel.setData([]);
                     // var arr = [];
-                    
+
 
                     // var nodesModel = new JSONModel();
                     // this.getView().setModel(nodesModel, "productBatchDetails");
-        
+
                     // var oModel = this.getOwnerComponent().getModel("prodRecall");
-        
+
                     // var oHeaderPromise = new Promise(function (resolve, reject) {
-        
+
                     //     oModel.read("/ProdRecallSet(MaterialNumber='TD000001',Batch='555')/Details", {
                     //         //filters: aFilters,
                     //         // urlParameters: {
@@ -336,7 +336,7 @@ sap.ui.define(
                     //                 this.getView().getModel("productBatchDetails").setData(oData.results[0]);
                     //             }
                     //             //   this._oMessagesDialog.openBy(oEvent.getSource());
-        
+
                     //             resolve(oData);
                     //             //this.getView().setModel(arr,"productBatchDetails");
                     //         }.bind(this),
@@ -352,47 +352,47 @@ sap.ui.define(
                     // console.log(mProduct);
                     var oModel = this.getOwnerComponent().getModel("prodRecall");
                     var pModel = new sap.ui.model.json.JSONModel();
-                    this.getView().setModel(pModel,"prodBatchDetails");
-                    
+                    this.getView().setModel(pModel, "prodBatchDetails");
 
-                    oModel.read("/ProdRecallSet",{
+
+                    oModel.read("/ProdRecallSet", {
                         filters: aFilters,
-                        success: function(oData,response) {
+                        success: function (oData, response) {
                             console.log(oData);
-                             that.pData = [];
-                            if(oData.results.length > 0){
-                                for (var i=0; i< oData.results.length; i++){
-                                    var bData= {
-                                    "MaterialNumber" : oData.results[i].MaterialNumber,
-                                    "MaterialDescription": oData.results[i].MaterialDescription,
-                                    "Batch" : oData.results[i].Batch,
-                                    "Plant" : oData.results[i].Plant,
-                                    "StockInHand": oData.results[i].StockInHand,
-                                    "SoldQuantity": oData.results[i].SoldQuantity,
-                                    "SoldUnit": oData.results[i].SoldUnit,
-                                    "SalesOrder": oData.results[i].SalesOrder,
-                                    "SalesValue": oData.results[i].SalesValue,
-                                    "BatchExpDate": oData.results[i].BatchExpDate,
-                                    "Currency":oData.results[i].Currency
+                            that.pData = [];
+                            if (oData.results.length > 0) {
+                                for (var i = 0; i < oData.results.length; i++) {
+                                    var bData = {
+                                        "MaterialNumber": oData.results[i].MaterialNumber,
+                                        "MaterialDescription": oData.results[i].MaterialDescription,
+                                        "Batch": oData.results[i].Batch,
+                                        "Plant": oData.results[i].Plant,
+                                        "StockInHand": oData.results[i].StockInHand,
+                                        "SoldQuantity": oData.results[i].SoldQuantity,
+                                        "SoldUnit": oData.results[i].SoldUnit,
+                                        "SalesOrder": oData.results[i].SalesOrder,
+                                        "SalesValue": oData.results[i].SalesValue,
+                                        "BatchExpDate": oData.results[i].BatchExpDate,
+                                        "Currency": oData.results[i].Currency
                                     }
                                     that.pData.push(bData);
                                 }
                             }
                             that.getView().getModel("prodBatchDetails").setData(oData.results);
                         },
-                        error : function(){
+                        error: function () {
                             MessageBox.show("Error");
                         }
                     });
 
                 },
-        
+
                 // Handle error response if any from HTTP call
                 handleErrorResponse: function (oResponse) {
                     var sErrMsg = "";
                     // Read response and display error message
                     if (oResponse.responseText) {
-        
+
                         if (jQuery.sap.startsWith(oResponse.responseText, "{\"error\":")) {
                             sErrMsg = JSON.parse(oResponse.responseText).error.message.value;
                         } else {
@@ -410,7 +410,7 @@ sap.ui.define(
                         autoClose: false
                     });
                 },
-        
+
                 getMessageFromXMLResponse: function (sResponseText) {
                     var sErrMsg = this._oResourceBundle.getText("xmsg.ErrorOccurred");
                     if (sResponseText) {
@@ -448,7 +448,7 @@ sap.ui.define(
                         //filters: aFilter,
                         success: function (oData, oResponse) {
                             //this._inObj.approvalData = [];
-                               _oContext.aObj = [];
+                            _oContext.aObj = [];
                             if (oData.results.length > 0) {
                                 for (var i = 0; i < oData.results.length; i++) {
                                     var obj = {
@@ -458,28 +458,28 @@ sap.ui.define(
                                         "Rule": oData.results[i].actorType
                                     }
                                     _oContext.aObj.push(obj);
-                                //	console.log(aObj);
+                                    //	console.log(aObj);
                                 }
-                            //	MessageBox.show("success");
-                            _oContext.createInvestigation(_oContext.adata);
-                               // _oContext.onWFConform();
+                                //	MessageBox.show("success");
+                                _oContext.createInvestigation(_oContext.adata);
+                                // _oContext.onWFConform();
                             } else {
                                 sap.m.MessageBox.error("No Busineess Rule defined for the Company Code and Project/ Department.");
-        
+
                             }
-        
+
                         },
                         error: function () {
                             MessageBox.error("error in getting approver data");
                         }
                     });
                 },
-                onLiveChange : function(oEvent){
-                        var sClass = oEvent.getSelectedItem();
-                        console.log(sClass);
+                onLiveChange: function (oEvent) {
+                    var sClass = oEvent.getSelectedItem();
+                    console.log(sClass);
 
                 },
-        
+
                 onWFConform: function () {
                     var that = this;
                     var array = [];
@@ -487,40 +487,83 @@ sap.ui.define(
                     // var yModel = this.getView().getModel("prodBatchDetails");
                     // var sdata =  yModel.getData();
                     var oModelData = this.getOwnerComponent().getModel("pModel");
-                    var oFormat = DateFormat.getDateTimeInstance({style: "medium"});
+                    var oFormat = DateFormat.getDateTimeInstance({ style: "medium" });
                     var inputValue = {
-                            comments: array,
-                            investigationNumber: that.investigation_No,
-                            initiatorEmail: that.initiatorMail,
-                            initiatorName: that.initiatorName,
-                            approversList: that.aObj,
-                            productList: that.pData,
-                            isApproved: null,
-                            currentApproverName: null,
-                            isFinalApprover: null,
-                            hasNextApprover: null,
-                            currentApprover: null,
-                            isInternal: null,
-                            isExternal: null,
-                            period : null,
-                            date : oFormat.format(new Date())
-                        },
+                        comments: array,
+                        complaintNumber: that.compNumber._lastValue,
+                        investigationNumber: that.investigation_No,
+                        initiatorEmail: that.initiatorMail,
+                        initiatorName: that.initiatorName,
+                        approversList: that.aObj,
+                        productList: that.pData,
+                        isApproved: null,
+                        currentApproverName: null,
+                        isFinalApprover: null,
+                        hasNextApprover: null,
+                        currentApprover: null,
+                        isInternal: null,
+                        isExternal: null,
+                        period: null,
+                        date: oFormat.format(new Date())
+                    },
                         oData = {
                             definitionId: "prodrecallwf",
                             context: inputValue
                         };
                     var token = that._fetchToken();
-                    
-                    var fnSuccess = function () {
-                            MessageBox.success("workflow started successfully");
-                        },
+
+                    var fnSuccess = function (result) {
+                        var _WorkFlowReturn = result;
+                        // var wfnSuccess = function () {
+                        //     MessageBox.success("workflow started successfully");
+                        // };
+                        var wfData = [];
+                        //updating cap table with approver list
+                        that.aObj.forEach((v) => {
+                            var sLevel = v.Level;
+								sLevel = sLevel.toString(); //.substring(0, sLevel.indexOf("."));
+								if (sLevel == '1') {
+									wfData.push({
+										Level: sLevel,
+										Status: "P",
+										Email: v.ApproverEmail,
+										Rule: v.Rule,
+										Remarks: "",
+										ApproverName: v.ApproverName
+									});
+								} else {
+									wfData.push({
+										Level: sLevel,
+										Status: "W",
+										Email: v.ApproverEmail,
+										Rule: v.Rule,
+										Remarks: "",
+										ApproverName: v.ApproverName
+									});
+								}
+                        });
+                        var oData1 = {
+                            ComplaintNumb: that.compNumber._lastValue,
+                            CLevel: "1",
+                            WFId: _WorkFlowReturn.id,
+                            WFItems: wfData
+                        }
+                        oModelData.create("/WorkFlow",oData1,{
+                            success: function(oData){
+                                MessageBox.success("workflow started successfully");
+                            },
+                            error:function(){
+                                MessageBox.error("workflow failed");
+                            }
+                        });
+                    },
                         fnError = function () {
                             MessageBox.error("workflow failed");
                         };
                     that._startInstance(token, oData, fnSuccess, fnError);
-        
+
                 },
-        
+
                 initiatorData: function () {
                     var _oContext = this;
                     var oModel = this.getOwnerComponent().getModel("pModel");
@@ -593,7 +636,7 @@ sap.ui.define(
                     debugger;
                     var that = this;
                     $.ajax({
-                        url: this._getWorkflowRuntimeBaseURL()+"/workflow-instances",
+                        url: this._getWorkflowRuntimeBaseURL() + "/workflow-instances",
                         method: "POST",
                         async: false,
                         contentType: "application/json",
